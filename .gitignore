@@ -1,0 +1,52 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Cache de dependências e builds
+node_modules
+.turbo
+dist
+build
+out
+cdk.out
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de ambiente (NUNCA comitar segredos!)
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Arquivos de IDE/Editor
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+*.sublime-project
+.idea
+
+# Arquivos de teste
+coverage
+.nyc_output
+
+# Arquivos temporários TypeScript
+*.tsbuildinfo
+
+# Arquivos CDK Context (geralmente não devem ser comitados)
+cdk.context.json
+
+# Outros
+*.zip
+*.tar
+*.gz
