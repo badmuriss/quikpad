@@ -76,7 +76,7 @@ const exportToMarkdown = () => {
     
     turndownService.addRule('codeBlocks', {
       filter: ['pre'],
-      replacement: function(content, node) {
+      replacement: function(content) {
         return '```\n' + content + '\n```';
       }
     });
