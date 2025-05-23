@@ -2,7 +2,7 @@
 import { nanoid } from 'nanoid';
 import { Note } from '../types';
 
-const API_ENDPOINT = 'http://localhost:3001';
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
 
 export async function generateUniqueId(): Promise<string> {
   let id = nanoid(7);
@@ -34,7 +34,8 @@ export async function getNote(id: string): Promise<Note | null> {
     if (!response.ok) {
       throw new Error('Failed to fetch note');
     }
-    return await response.json();
+    const data = await response.json();
+    return {id: id, content: data.content};
   } catch (error) {
     console.error('Error fetching note:', error);
     return null;
@@ -57,7 +58,7 @@ export async function createNote(id: string): Promise<Note | null> {
       throw new Error('Failed to create note');
     }
     
-    return await response.json();
+    return {id: id, content: ''};
   } catch (error) {
     console.error('Error creating note:', error);
     return null;
@@ -70,9 +71,7 @@ export async function updateNote(id: string, content: string): Promise<Note | nu
     return null;
   }
   
-  try {
-    console.log(`Updating note ${id} with content length: ${content.length}`);
-    
+  try {    
     const response = await fetch(`${API_ENDPOINT}/notes/${id}`, {
       method: 'PUT',
       headers: {
@@ -88,7 +87,6 @@ export async function updateNote(id: string, content: string): Promise<Note | nu
     }
     
     const data = await response.json();
-    console.log('Update response:', data);
     return data;
   } catch (error) {
     console.error('Error updating note:', error);
