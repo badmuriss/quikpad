@@ -46,6 +46,10 @@ coverage
 # Arquivos CDK Context (geralmente não devem ser comitados)
 cdk.context.json
 
+backend/lib
+mongo-data
+
+
 # Outros
 *.zip
 *.tar
