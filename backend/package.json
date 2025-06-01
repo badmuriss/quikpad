@@ -1,8 +1,8 @@
 {
   "scripts": {
+    "dev": "ts-node src/server.ts",
     "start:local": "docker-compose up -d && ts-node src/server.ts",
     "stop:local": "docker-compose down",
-    "setup:db": "ts-node src/setup-local-db.ts",
     "build": "tsc"
   },
   "dependencies": {

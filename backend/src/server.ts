@@ -12,8 +12,6 @@ app.all('/codes/:id', (req, res) => handleRequest(req, res, '/codes/'));
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Servidor local rodando em http://localhost:${PORT}`);
-  console.log(`MongoDB local disponível em mongodb://root:example@localhost:27017`);
   console.log(`Endpoints disponíveis:`);
   console.log(`  GET/PUT http://localhost:${PORT}/notes/{id}`);
   console.log(`  GET/PUT http://localhost:${PORT}/codes/{id}`);
