@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useRef, useState, useEffect } from 'react'
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react"
 
 // --- Tiptap Core Extensions ---
@@ -69,7 +70,6 @@ import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle"
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
 import { Note } from "src/types"
-import { useEffect, useState } from "react"
 import { ShareButton } from '../../../../src/components/share-button';
 import { useDebounce } from 'use-debounce'
 import { updateNote } from "../../../../src/utils/api"
@@ -188,7 +188,84 @@ export function SimpleEditor(note: Note) {
     width: 0,
     height: 0,
   })
-  const toolbarRef = React.useRef<HTMLDivElement>(null)
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
+
+  // Modificado para ignorar movimento vertical
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!toolbarRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - toolbarRef.current.offsetLeft);
+    setScrollLeft(toolbarRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !toolbarRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - toolbarRef.current.offsetLeft;
+    const walk = (x - startX) * 2;
+    toolbarRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+ // Modificado para ignorar movimento vertical
+const handleTouchStart = (e: React.TouchEvent) => {
+  if (!toolbarRef.current) return;
+  setIsDragging(true);
+  setStartX(e.touches[0].pageX - toolbarRef.current.offsetLeft);
+  setScrollLeft(toolbarRef.current.scrollLeft);
+  
+  // Armazenar a posição Y inicial para detectar movimento vertical
+  const startY = e.touches[0].pageY;
+  (e.currentTarget as any).startY = startY;
+};
+
+const handleTouchMove = (e: React.TouchEvent) => {
+  if (!isDragging || !toolbarRef.current) return;
+  
+  const currentX = e.touches[0].pageX - toolbarRef.current.offsetLeft;
+  const currentY = e.touches[0].pageY;
+  const startY = (e.currentTarget as any).startY || 0;
+  
+  // Calcular a distância vertical e horizontal do movimento
+  const deltaY = Math.abs(currentY - startY);
+  const deltaX = Math.abs(currentX - startX);
+  
+  // Se o movimento for mais horizontal que vertical, prevenir o comportamento padrão
+  // Isso impede que a página role quando o usuário tenta rolar o toolbar horizontalmente
+  if (deltaX > deltaY) {
+    e.preventDefault();
+    
+    const walk = (currentX - startX) * 2;
+    toolbarRef.current.scrollLeft = scrollLeft - walk;
+  } else {
+    // Se o movimento for mais vertical, encerrar o arrasto do toolbar
+    // para permitir que a página role normalmente
+    setIsDragging(false);
+  }
+};
+
+const handleTouchEnd = () => {
+  setIsDragging(false);
+};
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => setIsDragging(false);
+    const handleGlobalTouchEnd = () => setIsDragging(false);
+
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+    document.addEventListener('touchend', handleGlobalTouchEnd);
+
+    return () => {
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      document.removeEventListener('touchend', handleGlobalTouchEnd);
+    };
+  }, []);
 
   React.useEffect(() => {
     const updateRect = () => {
@@ -314,7 +391,18 @@ export function SimpleEditor(note: Note) {
     <EditorContext.Provider value={{ editor }}>
      
       
-      <Toolbar
+      <div
+        className="toolbar-container"
+        ref={toolbarRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <Toolbar
       
         ref={toolbarRef}
         style={
@@ -340,28 +428,28 @@ export function SimpleEditor(note: Note) {
           )}
         </div>
         {mobileView === "main" ? (
-          <MainToolbarContent
-            onHighlighterClick={() => setMobileView("highlighter")}
-            onLinkClick={() => setMobileView("link")}
-            isMobile={isMobile}
-          />
-        ) : (
-          <MobileToolbarContent
-            type={mobileView === "highlighter" ? "highlighter" : "link"}
-            onBack={() => setMobileView("main")}
-          />
-        )}
+            <MainToolbarContent
+              onHighlighterClick={() => setMobileView("highlighter")}
+              onLinkClick={() => setMobileView("link")}
+              isMobile={isMobile}
+            />
+          ) : (
+            <MobileToolbarContent
+              type={mobileView === "highlighter" ? "highlighter" : "link"}
+              onBack={() => setMobileView("main")}
+            />
+          )}
         <div className="flex justify-center m-4">
           <button 
-            className="flex text-sm items-center gap-2 px-4 py-2 bg-[#7c3aed] text-white rounded-md font-medium hover:bg-[#6d28d9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#7c3aed] focus:ring-opacity-50"
+            className="flex text-sm items-center gap-2 px-3 py-2 bg-[#7c3aed] text-white rounded-md font-medium hover:bg-[#6d28d9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#7c3aed] focus:ring-opacity-50"
             onClick={() => window.location.href = '/'}
             aria-label="Create new note"
           >
             <i className="bi bi-plus-lg"></i>
-            <span>New Note</span>
           </button>
         </div>
       </Toolbar>
+      </div>
 
       <div className="content-wrapper">
         <EditorContent

@@ -83,3 +83,27 @@ body {
   max-width: 900px;
   margin: 0 auto;
 }
+
+@media (max-width: 768px) {
+  .simple-editor-content {
+    padding-top: 3.5rem;
+  }
+  .simple-editor {
+    .toolbar-container {
+      touch-action: pan-x !important; /* Permite apenas gestos horizontais */
+      overscroll-behavior-y: none;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch; 
+      overflow-y: hidden !important;
+      touch-action: pan-x !important; 
+    }
+    
+    .toolbar {
+      button {
+        font-size: 16px;
+        padding: 4px;
+        padding-bottom: 20px;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@
   
   @media (max-width: 480px)  {
     position: fixed !important;
-    top: 30px !important;
+    top: 20px !important;
     right: 20px !important;
     z-index: 9999 !important;
   }
@@ -17,8 +17,8 @@
   background: #7c3aed !important; // Roxo fixo
   color: #fff !important;
   border: none !important;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   z-index: 9999;
   position: relative;
   border-radius: 50%;
@@ -30,8 +30,8 @@
   cursor: pointer;
 
   svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     stroke: #fff;
     stroke-width: 2;
     display: block;

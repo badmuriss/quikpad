@@ -1,4 +1,6 @@
 {
+  "name": "backend",
+  "version": "1.0.0",
   "scripts": {
     "dev": "ts-node src/server.ts",
     "start:local": "docker-compose up -d && ts-node src/server.ts",

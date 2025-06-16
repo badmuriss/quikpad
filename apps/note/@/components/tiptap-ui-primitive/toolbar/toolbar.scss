@@ -5,6 +5,7 @@
   --tt-safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --tt-toolbar-bg-color: var(--white);
   --tt-toolbar-border-color: var(--tt-gray-light-a-100);
+  --tt-toolbar-mobile-height: 3.5rem; /* Altura maior para mobile */
 }
 
 .dark {
@@ -45,10 +46,13 @@
     border-bottom: 1px solid var(--tt-toolbar-border-color);
     padding: 0.5rem 0.5rem;
     overflow-x: auto;
+    overflow-y: hidden; /* Impede scroll vertical */
     overscroll-behavior-x: contain;
+    overscroll-behavior-y: none; /* Impede overscroll vertical */
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    touch-action: pan-x; /* Permite apenas gestos horizontais */
 
     &::-webkit-scrollbar {
       display: none;
@@ -58,19 +62,22 @@
       position: fixed;
       top: auto;
       bottom: 0;
-      height: calc(var(--tt-toolbar-height) + var(--tt-safe-area-bottom));
+      left: 0;
+      right: 0;
+      height: calc(var(--tt-toolbar-mobile-height) + var(--tt-safe-area-bottom));
       border-top: 1px solid var(--tt-toolbar-border-color);
       border-bottom: none;
-      padding: 0.5rem 0.5rem var(--tt-safe-area-bottom);
+      padding: 0.75rem 0.5rem calc(0.75rem + var(--tt-safe-area-bottom));
       flex-wrap: nowrap;
       justify-content: flex-start;
-
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+      touch-action: pan-x; /* Reforçando: permite apenas gestos horizontais */
+      
       .tiptap-toolbar-group {
         flex: 0 0 auto;
       }
     }
   }
-
 
   &[data-variant="floating"] {
     --tt-toolbar-padding: 0.5rem;
@@ -79,6 +86,27 @@
     .tiptap-toolbar-group {
       padding: 0.25rem;
     }
+  }
+}
+
+/* Ajuste para o conteúdo não ficar escondido atrás do toolbar fixo em mobile */
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding-bottom: calc(var(--tt-toolbar-mobile-height) + var(--tt-safe-area-bottom) + 1rem);
+  }
+  
+  /* Classe específica para o container do toolbar */
+  .toolbar-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    overflow-x: auto;
+    overflow-y: hidden !important;
+    touch-action: pan-x !important;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
