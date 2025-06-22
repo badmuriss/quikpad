@@ -1,35 +1,191 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import { useState, useEffect, useRef } from 'react';
+import { generateUniqueId, getCode, updateCode } from './utils/api';
+import CodeEditor from './components/CodeEditor';
+import ThemeToggle from './components/ThemeToggle';
+import LanguageSelector from './components/LanguageSelector';
+import { ShareButton } from './components/ShareButton';
+import './styles/share-button.scss';
+import { debounce } from 'lodash';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [content, setContent] = useState('');
+  const [language, setLanguage] = useState('javascript');
+  const [noteId, setNoteId] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [theme, setTheme] = useState('light');
+  const [isSaving, setIsSaving] = useState(false);
+  const contentRef = useRef(content);
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+    
+    setTheme(isDark ? 'dark' : 'light');
+    
+    // Adicione um event listener para o evento de armazenamento
+    const handleStorageChange = () => {
+      const currentTheme = localStorage.getItem('theme');
+      setTheme(currentTheme === 'dark' ? 'dark' : 'light');
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Também observe mudanças na classe do documentElement
+    const observer = new MutationObserver(() => {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      setTheme(isDarkMode ? 'dark' : 'light');
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+    
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  // Initialize note from URL or create new one
+  useEffect(() => {
+    const initializeNote = async () => {
+      try {
+        // Check if there's a note ID in the URL
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const urlNoteId = pathParts[0];
+
+        if (urlNoteId) {
+          // Try to load existing note
+          const existingNote = await getCode(urlNoteId);
+          if (existingNote) {
+            setNoteId(urlNoteId); // Use the ID from URL directly
+            setContent(existingNote.content);
+            if (existingNote.language) {
+              setLanguage(existingNote.language);
+            }
+          } else {
+            // Note doesn't exist, create new one with this ID
+            await updateCode(urlNoteId, "javascript");
+            setNoteId(urlNoteId); // Make sure to set the ID here
+          }
+        } else {
+          // Create new note
+          const newId = await generateUniqueId();
+          await updateCode(newId, "");
+          window.history.replaceState({}, '', `/${newId}`);
+          setNoteId(newId);
+        }
+      } catch (error) {
+        console.error('Error initializing note:', error);
+        // Fallback: generate a local ID if API fails
+        const fallbackId = await generateUniqueId();
+        setNoteId(fallbackId);
+        setContent('');
+        setLanguage('javascript');
+        window.history.replaceState({}, '', `/${fallbackId}`);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeNote();
+  }, []);
+
+// Função para salvar a nota com debounce
+  const saveNoteDebounced = useRef(
+    debounce(async (noteId: string, content: string, language: string | undefined) => {
+      if (!noteId) return;
+      
+      try {
+        setIsSaving(true);
+        await updateCode(noteId, content, language);
+      } catch (error) {
+        console.error('Error saving note:', error);
+      } finally {
+        setTimeout(() => {
+          setIsSaving(false);
+        }, 400);
+      }
+    }, 2000)
+  ).current;
+    
+  const handleContentChange = (newContent: string) => {
+    contentRef.current = newContent;
+    saveNoteDebounced(noteId, newContent, language);
+  };
+
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-950">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading QuikCode...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="h-screen bg-white dark:bg-gray-950 flex flex-col overflow-hidden">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex items-center space-x-4">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+            QuikCode
+          </h1>
+          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+            <span>ID: {noteId}</span>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          {isSaving && (
+              <span className="flex items-center space-x-1 text-purple-500">
+                <div className="w-3 h-3 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                <span>Saving...</span>
+              </span>
+            )}
+          <LanguageSelector
+            selectedLanguage={language}
+            onLanguageChange={handleLanguageChange}
+          />
+          <ThemeToggle />
+        </div>
+      </header>
+
+      {/* Editor */}
+      <main className="flex-1 overflow-hidden">
+        <div 
+          ref={editorRef} 
+          className="h-full bg-white dark:bg-gray-950"
+          id="prism-editor-container"
+        >
+          <CodeEditor
+            value={content}
+            language={language}
+            onChange={handleContentChange}
+            theme={theme == 'light' || theme == 'dark' ? theme : undefined}
+          />
+        </div>
+      </main>
+
+      {/* Share Button */}
+      <ShareButton
+        content={content}
+        noteId={noteId}
+        language={language}
+        editorElement={editorRef.current}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
