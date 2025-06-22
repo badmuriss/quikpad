@@ -23,12 +23,12 @@ function App() {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
     
-    setTheme(isDark ? 'dark' : 'light');
+    setTheme(isDark ? 'github-dark' : 'github-light');
     
     // Adicione um event listener para o evento de armazenamento
     const handleStorageChange = () => {
       const currentTheme = localStorage.getItem('theme');
-      setTheme(currentTheme === 'dark' ? 'dark' : 'light');
+      setTheme(currentTheme === 'dark' ? 'github-dark' : 'github-light');
     };
     
     window.addEventListener('storage', handleStorageChange);
@@ -36,7 +36,7 @@ function App() {
     // Também observe mudanças na classe do documentElement
     const observer = new MutationObserver(() => {
       const isDarkMode = document.documentElement.classList.contains('dark');
-      setTheme(isDarkMode ? 'dark' : 'light');
+      setTheme(isDarkMode ? 'github-dark' : 'github-light');
     });
     
     observer.observe(document.documentElement, {
@@ -124,7 +124,7 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-950">
+      <div className="flex items-center justify-center h-screen bg-white dark:bg-[#0d1117]">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading QuikCode...</p>
@@ -136,11 +136,8 @@ function App() {
   return (
     <div className="h-screen bg-white dark:bg-gray-950 flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+      <header className="flex items-center justify-between px-6 py-4 bg-white dark:bg-[#0d1117] border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-            QuikCode
-          </h1>
           <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
             <span>ID: {noteId}</span>
           </div>
@@ -165,14 +162,14 @@ function App() {
       <main className="flex-1 overflow-hidden">
         <div 
           ref={editorRef} 
-          className="h-full bg-white dark:bg-gray-950"
+          className="h-full bg-white dark:bg-[#0d1117]"
           id="prism-editor-container"
         >
           <CodeEditor
             value={content}
             language={language}
             onChange={handleContentChange}
-            theme={theme == 'light' || theme == 'dark' ? theme : undefined}
+            theme={theme}
           />
         </div>
       </main>
