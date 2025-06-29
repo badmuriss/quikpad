@@ -35,6 +35,9 @@ services:
       context: ./apps/hub
       dockerfile: Dockerfile
     restart: always
+    environment:
+      VITE_QUIKNOTE_URL: ${QUIKNOTE_URL}
+      VITE_QUIKCODE_URL: ${QUIKCODE_URL} 
     ports:
       - "6010:80"
     networks:
@@ -45,6 +48,8 @@ services:
       context: ./apps/note
       dockerfile: Dockerfile
     restart: always
+    environment:
+      VITE_API_ENDPOINT: ${API_ENDPOINT}
     ports:
       - "6011:80"
     networks:
@@ -55,6 +60,8 @@ services:
       context: ./apps/code
       dockerfile: Dockerfile
     restart: always
+    environment:
+      VITE_API_ENDPOINT: ${API_ENDPOINT}
     ports:
       - "6012:80"
     networks:
