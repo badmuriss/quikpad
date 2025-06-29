@@ -6,8 +6,8 @@ import quikNoteImage from './assets/images/quiknote-thumbnail.png';
 import quikCodeImage from './assets/images/quikcode-thumbnail.png';
 import { BsCodeSquare, BsJournalText } from 'react-icons/bs';
 
-const QUIKNOTE_URL = import.meta.env.VITE_QUIKNOTE_URL || "http://localhost:6001";
-const QUIKCODE_URL = import.meta.env.VITE_QUIKCODE_URL || "http://localhost:6002";
+const QUIKNOTE_URL = import.meta.env.VITE_QUIKNOTE_URL || "http://localhost:6011";
+const QUIKCODE_URL = import.meta.env.VITE_QUIKCODE_URL || "http://localhost:6012";
 
 
 const App: React.FC = () => {

@@ -36,7 +36,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "6000:80"
+      - "6010:80"
     networks:
       - quikpad-network
 
@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "6001:80"
+      - "6011:80"
     networks:
       - quikpad-network
     
@@ -56,7 +56,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "6002:80"
+      - "6012:80"
     networks:
       - quikpad-network
 
