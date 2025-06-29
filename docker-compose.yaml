@@ -18,7 +18,10 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      MONGO_URL: mongodb://root:${MONGO_PASSWORD:-example}@mongo:27017/
+      MONGO_URI: mongodb://root:${MONGO_PASSWORD:-example}@mongo:27017/
+      MONGO_DB: quikpad
+      NOTES_COLLECTION: quikNotes
+      CODES_COLLECTION: quikCodes
       NODE_ENV: production
     depends_on:
       - mongo

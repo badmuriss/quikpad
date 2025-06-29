@@ -3,8 +3,9 @@ import { getDb } from './mongoClient';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const notesCollection = process.env.NOTES_COLLECTION!;
-const codesCollection = process.env.CODES_COLLECTION!;
+  const notesCollection = process.env.NOTES_COLLECTION || "quikNotes";
+  const codesCollection = process.env.CODES_COLLECTION || "quikCotes";
+
 
 export async function handleRequest(req: Request, res: Response, basePath: string) {
   try {
@@ -18,15 +19,18 @@ export async function handleRequest(req: Request, res: Response, basePath: strin
       return res.status(400).json({ message: 'Missing ID parameter' });
     }
 
-    const now = Math.floor(Date.now() / 1000);
-    const expiresAt = now + (30 * 24 * 60 * 60);
+    const now = new Date();
+    const expiresAt = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)); // 30 dias
 
     if (req.method === 'GET') {
       const doc = await collection.findOne({ id });
       if (!doc) {
         return res.status(404).json({ message: 'Not Found' });
       }
-      const responseBody: any = { content: doc.content, updatedAt: doc.updatedAt };
+      const responseBody: any = { 
+        content: doc.content, 
+        updatedAt: doc.updatedAt 
+      };
       if (!isNoteRequest && doc.language) responseBody.language = doc.language;
       return res.status(200).json(responseBody);
     } else if (req.method === 'PUT') {
@@ -34,21 +38,28 @@ export async function handleRequest(req: Request, res: Response, basePath: strin
       if (typeof content !== 'string') {
         return res.status(400).json({ message: 'Invalid content format' });
       }
+      
       const docToSave: any = {
         id,
         content,
         updatedAt: now,
-        expiresAt,
+        expiresAt
       };
+      
       if (!isNoteRequest && typeof language === 'string') {
         docToSave.language = language;
       }
+      
       await collection.updateOne(
         { id },
         { $set: docToSave },
         { upsert: true }
       );
-      return res.status(200).json({ message: 'Saved successfully', updatedAt: now });
+      
+      return res.status(200).json({ 
+        message: 'Saved successfully', 
+        updatedAt: now 
+      });
     } else {
       return res.status(405).json({ message: 'Method Not Allowed' });
     }
