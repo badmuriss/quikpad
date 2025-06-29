@@ -34,10 +34,10 @@ services:
     build:
       context: ./apps/hub
       dockerfile: Dockerfile
+      args:
+        VITE_QUIKNOTE_URL: ${QUIKNOTE_URL}
+        VITE_QUIKCODE_URL: ${QUIKCODE_URL} 
     restart: always
-    environment:
-      VITE_QUIKNOTE_URL: ${QUIKNOTE_URL}
-      VITE_QUIKCODE_URL: ${QUIKCODE_URL} 
     ports:
       - "6010:80"
     networks:
@@ -47,9 +47,9 @@ services:
     build:
       context: ./apps/note
       dockerfile: Dockerfile
+      args:
+        VITE_API_ENDPOINT: ${API_ENDPOINT}
     restart: always
-    environment:
-      VITE_API_ENDPOINT: ${API_ENDPOINT}
     ports:
       - "6011:80"
     networks:
@@ -59,9 +59,9 @@ services:
     build:
       context: ./apps/code
       dockerfile: Dockerfile
+      args:
+        VITE_API_ENDPOINT: ${API_ENDPOINT}
     restart: always
-    environment:
-      VITE_API_ENDPOINT: ${API_ENDPOINT}
     ports:
       - "6012:80"
     networks:

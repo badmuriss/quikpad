@@ -3,6 +3,10 @@ FROM node:20-alpine as build
 
 WORKDIR /app
 
+ARG VITE_API_ENDPOINT
+
+ENV VITE_API_ENDPOINT=$VITE_API_ENDPOINT
+
 # Copy package files
 COPY package*.json ./
 RUN npm ci
