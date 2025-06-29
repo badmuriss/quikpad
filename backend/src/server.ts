@@ -8,6 +8,7 @@ const allowedOrigins = [
   'https://quiknote.pro',
   'http://31.97.166.240:6011',
   'http://31.97.166.240:6012',
+  'http://dkw4ccw8ww0w0ksoc0gs8408.31.97.166.240.sslip.io'
 ];
 
 const app = express();
