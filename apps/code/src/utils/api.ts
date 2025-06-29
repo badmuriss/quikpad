@@ -2,7 +2,7 @@
 import { nanoid } from 'nanoid';
 import type { Note } from '../types';
 
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || "http://localhost:3001";
 
 export async function generateUniqueId(): Promise<string> {
   let id = nanoid(7);

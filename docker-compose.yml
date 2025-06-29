@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-example}
+    networks:
+      - quikpad-network
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      MONGO_URL: mongodb://root:${MONGO_PASSWORD:-example}@mongo:27017/
+      NODE_ENV: production
+    depends_on:
+      - mongo
+    ports:
+      - "3001:3001"
+    networks:
+      - quikpad-network
+
+  hub-app:
+    build:
+      context: ./apps/hub
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "6000:80"
+    networks:
+      - quikpad-network
+
+  note-app:
+    build:
+      context: ./apps/note
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "6001:80"
+    networks:
+      - quikpad-network
+    
+  code-app:
+    build:
+      context: ./apps/code
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "6002:80"
+    networks:
+      - quikpad-network
+
+
+volumes:
+  mongo_data:
+
+networks:
+  quikpad-network:
+    driver: bridge

@@ -1,10 +1,14 @@
 {
-  "name": "quiksuite",
+  "name": "quikpad",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "deploy": "docker compose up -d --build",
     "dev": "turbo run dev"
   },
   "keywords": [],
