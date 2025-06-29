@@ -8,6 +8,5 @@ coverage
 .vscode
 .DS_Store
 mongo-data
-src
 *.ts
 !lib
