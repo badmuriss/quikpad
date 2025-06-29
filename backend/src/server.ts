@@ -3,8 +3,17 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { handleRequest } from './handler'; // ajuste o caminho conforme seu projeto
 
+const allowedOrigins = [
+  'https://quikcode.pro',
+  'https://quiknote.pro',
+  'http://31.97.166.240:6011',
+  'http://31.97.166.240:6012',
+];
+
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins
+}));
 app.use(bodyParser.json());
 
 app.all('/notes/:id', (req, res) => handleRequest(req, res, '/notes/'));
