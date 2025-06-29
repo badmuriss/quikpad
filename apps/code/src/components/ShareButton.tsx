@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { exportToImage } from '../utils/exportUtils';
 import '../styles/share-button.scss';
 
 interface ShareButtonProps {
@@ -13,8 +12,7 @@ interface ShareButtonProps {
 export const ShareButton: React.FC<ShareButtonProps> = ({ 
   content, 
   noteId, 
-  language,
-  editorElement 
+  language
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -65,29 +63,6 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
     } catch (err) {
       console.error("Export failed:", err);
       alert(`Failed to export: ${err}`);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
-  const exportAsImage = async () => {
-    if (!editorElement) {
-      alert('Editor not ready for export');
-      return;
-    }
-
-    try {
-      setIsExporting(true);
-      await exportToImage({
-        element: editorElement,
-        filename: `quikcode-${noteId}`,
-        windowTitle: 'QuikCode',
-        language,
-        format: 'png',
-      });
-    } catch (err) {
-      console.error("Image export failed:", err);
-      alert(`Failed to export as image: ${err}`);
     } finally {
       setIsExporting(false);
     }

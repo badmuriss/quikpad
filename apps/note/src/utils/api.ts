@@ -35,7 +35,7 @@ export async function getNote(id: string): Promise<Note | null> {
       throw new Error('Failed to fetch note');
     }
     const data = await response.json();
-    return {id: id, content: data.content};
+    return {id: id, content: data?.content};
   } catch (error) {
     console.error('Error fetching note:', error);
     return null;
