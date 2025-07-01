@@ -414,7 +414,7 @@ const handleTouchEnd = () => {
         }
       >
         {/* Indicador de status */}
-         <div className="save-status">
+        <div className="save-status w-20"> {/* ou w-24 dependendo do tamanho necessário */}
           {isSaving && (
             <span className="text-gray-500 ms-4 text-sm">Saving...</span>
           )}
