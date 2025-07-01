@@ -44,15 +44,15 @@ const NotePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white">
-        <div className="text-gray-500">Loading note...</div>
+      <div className="flex items-center justify-center h-screen bg-[#0d1117]">
+        <div className="text-gray-400">Loading note...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white">
+      <div className="flex items-center justify-center h-screen bg-[#0d1117]">
         <div className="text-red-500">{error}</div>
       </div>
     );
@@ -60,8 +60,8 @@ const NotePage: React.FC = () => {
 
   if (!note) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white">
-        <div className="text-gray-500">Note not found</div>
+      <div className="flex items-center justify-center h-screen bg-[#0d1117]">
+        <div className="text-gray-400">Note not found</div>
       </div>
     );
   }

@@ -124,10 +124,10 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white dark:bg-[#0d1117]">
+      <div className="flex items-center justify-center h-screen bg-[#0d1117]">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading QuikCode...</p>
+          <p className="text-gray-400">Loading QuikCode...</p>
         </div>
       </div>
     );
