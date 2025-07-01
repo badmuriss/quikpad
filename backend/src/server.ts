@@ -8,6 +8,8 @@ const allowedOrigins = [
   'https://quiknote.pro',
   'http://31.97.166.240:6011',
   'http://31.97.166.240:6012',
+  'http://localhost:6001',
+  'http://localhost:6002'
 ];
 
 const app = express();

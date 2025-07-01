@@ -387,6 +387,18 @@ const handleTouchEnd = () => {
     checkCursorVisibility();
   }, [editor, rect.height, windowSize.height]);
 
+  const handleContentClick = () => {
+    if (isMobile && editor) {
+      editor.commands.focus();
+    }
+  };  
+
+  const handleToolbarClick = (e: React.MouseEvent) => {
+    if (isMobile) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <EditorContext.Provider value={{ editor }}>
      
@@ -401,6 +413,7 @@ const handleTouchEnd = () => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onClick={handleToolbarClick}
       >
         <Toolbar
       
@@ -451,7 +464,7 @@ const handleTouchEnd = () => {
       </Toolbar>
       </div>
 
-      <div className="content-wrapper">
+      <div className="content-wrapper" onClick={handleContentClick}>
         <EditorContent
           editor={editor}
           role="presentation"

@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "ts-node src/server.ts",
-    "start:local": "docker-compose up -d && ts-node src/server.ts",
+    "dev": "tsc && node lib/server.js",
+    "dev:watch": "tsc --watch",
+    "start:local": "docker-compose up -d && npm run dev",
     "stop:local": "docker-compose down",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node lib/server.js"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
