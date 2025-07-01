@@ -1,17 +1,28 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { handleRequest } from './handler';
+import { handleRequest } from './handler'; // ajuste o caminho conforme seu projeto
 
-const corsOptions = {
-    origin: ['https://api.quikpad.pro', 'https://quikcode.pro', 'https://quiknote.pro'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type'],
-};
+const allowedOrigins = [
+  'https://quikcode.pro',
+  'https://quiknote.pro',
+  'http://31.97.166.240:6011',
+  'http://31.97.166.240:6012',
+];
 
 const app = express();
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
+app.use(
+  bodyParser.json(),
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        return callback(null, true);
+      } else {
+        return callback(new Error('Not allowed by CORS'));
+      }
+    }
+}));
 
 app.all('/notes/:id', (req, res) => handleRequest(req, res, '/notes/'));
 app.all('/codes/:id', (req, res) => handleRequest(req, res, '/codes/'));
