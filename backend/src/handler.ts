@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getDb } from './mongoClient';
+import { getDb } from './mongoClient.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { handleRequest } from './handler'; // ajuste o caminho conforme seu projeto
+import { handleRequest } from './handler.js';
 
 const allowedOrigins = [
   'https://quikcode.pro',
@@ -11,18 +11,17 @@ const allowedOrigins = [
 ];
 
 const app = express();
-app.use(
-  bodyParser.json(),
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        return callback(null, true);
-      } else {
-        return callback(new Error('Not allowed by CORS'));
-      }
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
     }
+  }
 }));
+app.use(bodyParser.json());
 
 app.all('/notes/:id', (req, res) => handleRequest(req, res, '/notes/'));
 app.all('/codes/:id', (req, res) => handleRequest(req, res, '/codes/'));
