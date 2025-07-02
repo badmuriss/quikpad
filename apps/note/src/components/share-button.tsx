@@ -14,7 +14,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({ editor, noteId }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const shareableLink = `${window.location.origin}/notes/${noteId}`;
+  const shareableLink = `${window.location.origin}/${noteId}`;
 
   const copyLink = async () => {
     try {

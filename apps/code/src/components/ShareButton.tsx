@@ -29,16 +29,6 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
     }
   };
 
-  const copyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(content);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy code:", err);
-    }
-  };
-
   const exportToFile = async (format: 'txt' | 'code') => {
     try {
       setIsExporting(true);
@@ -136,15 +126,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
                 </div>
               </div>
 
-              <div className="share-export-options">
-                <button onClick={copyCode} className="export-button">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="m5 15-4-4 4-4"></path>
-                  </svg>
-                  Copy Code
-                </button>
-                
+              <div className="share-export-options">      
                 <button 
                   onClick={() => exportToFile('code')} 
                   className="export-button"
