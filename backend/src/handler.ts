@@ -39,6 +39,15 @@ export async function handleRequest(req: Request, res: Response, basePath: strin
         return res.status(400).json({ message: 'Invalid content format' });
       }
       
+      const MAX_CONTENT_SIZE = 100 * 1024; // 100kb
+      if (content.length > MAX_CONTENT_SIZE) {
+        return res.status(413).json({ 
+          message: 'Content too large', 
+          maxSize: MAX_CONTENT_SIZE,
+          currentSize: content.length 
+        });
+      }
+      
       const docToSave: any = {
         id,
         content,

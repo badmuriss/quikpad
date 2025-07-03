@@ -25,11 +25,17 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   theme = 'github-dark',
 }) => {
   const handleChange = useCallback((newValue: string) => {
+    const MAX_SIZE = 100 * 1024; // 100kb
+    if (newValue.length > MAX_SIZE) {
+      alert('Code content too large');
+      return;
+    }
+    
     if (onChange) {
       onChange(newValue);
     }
   }, [onChange]);
-  
+    
   const [themeCss, setCss] = useState<string | null>(null);
   
   useEffect(() => {

@@ -317,6 +317,13 @@ const handleTouchEnd = () => {
     content: note.content,
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
+    
+      const MAX_SIZE = 100 * 1024; // 100kb
+      if (html.length > MAX_SIZE) {
+        alert('Content too large');
+        return;
+      }
+      
       setCurrentContent(html);
     },
   })
