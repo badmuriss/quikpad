@@ -29,7 +29,11 @@ services:
       - "3001:3001"
     networks:
       - quikpad-network
-    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   hub-app:
     build:
