@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.all('/notes/:id', (req, res) => handleRequest(req, res, '/notes/'));
 app.all('/codes/:id', (req, res) => handleRequest(req, res, '/codes/'));
 
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.status(200).send('OK');
 });
 
