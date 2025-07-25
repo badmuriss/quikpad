@@ -36,7 +36,5 @@ app.get('/health', (_req, res) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Endpoints disponíveis:`);
-  console.log(`  GET/PUT http://localhost:${PORT}/notes/{id}`);
-  console.log(`  GET/PUT http://localhost:${PORT}/codes/{id}`);
+  console.log(`QUIKPAD RUNNING`);
 }); 
