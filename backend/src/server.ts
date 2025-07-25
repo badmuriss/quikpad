@@ -6,6 +6,8 @@ import { handleRequest } from './handler.js';
 const allowedOrigins = [
   'https://quikcode.pro',
   'https://quiknote.pro',
+  'https://quikcode.cc',
+  'https://quiknote.cc',
   'http://31.97.166.240:6011',
   'http://31.97.166.240:6012',
   'http://localhost:6001',
