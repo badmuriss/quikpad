@@ -17,6 +17,7 @@ export async function generateUniqueId(): Promise<string> {
         id = nanoid(7);
       }
     } catch (error) {
+      console.error('Error fetching note:', error);
       // If there's an error fetching, we'll assume the ID is unique
       isUnique = true;
     }

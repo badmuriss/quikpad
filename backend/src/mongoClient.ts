@@ -2,8 +2,8 @@ import { MongoClient, Db } from 'mongodb';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const uri = process.env.MONGO_URI!;
-const dbName = process.env.MONGO_DB!;
+const uri = process.env.MONGO_URI! || "mongodb://root:password@localhost:27017";
+const dbName = process.env.MONGO_DB! || "quikpad";
 
 let client: MongoClient;
 let db: Db;

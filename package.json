@@ -9,7 +9,9 @@
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
     "deploy": "docker compose up -d --build",
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint"
   },
   "keywords": [],
   "author": "",

@@ -39,17 +39,14 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       const blob = new Blob([content], { type: mimeType });
       const url = URL.createObjectURL(blob);
       
-      // Criar elemento de download
       const link = document.createElement('a');
       link.href = url;
       link.download = `quikcode-${noteId}.${extension}`;
       link.style.display = 'none';
       
-      // Adicionar ao DOM, clicar e remover
       document.body.appendChild(link);
       link.click();
       
-      // Cleanup
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 

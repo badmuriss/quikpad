@@ -144,25 +144,34 @@ interface TriggerElementProps extends React.HTMLProps<HTMLElement> {
   asChild?: boolean
 }
 
+interface ElementWithRef {
+  ref?: React.Ref<HTMLElement>
+  [key: string]: unknown
+}
+
 const PopoverTrigger = React.forwardRef<HTMLElement, TriggerElementProps>(
   function PopoverTrigger({ children, asChild = false, ...props }, propRef) {
     const context = usePopoverContext()
+    
     const childrenRef = React.isValidElement(children)
       ? parseInt(React.version, 10) >= 19
-        ? (children.props as any).ref
-        : (children as any).ref
+        ? (children.props as ElementWithRef).ref
+        : (children as React.ReactElement & { ref?: React.Ref<HTMLElement> }).ref
       : undefined
+    
     const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
 
     if (asChild && React.isValidElement(children)) {
+      const childProps = children.props as Record<string, unknown>
+      
       return React.cloneElement(
         children,
         context.getReferenceProps({
           ref,
           ...props,
-          ...(children.props as any),
+          ...childProps,
           "data-state": context.open ? "open" : "closed",
-        })
+        } as Record<string, unknown>)
       )
     }
 

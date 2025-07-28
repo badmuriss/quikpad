@@ -39,9 +39,9 @@ export function ThemeToggle() {
       data-style="ghost"
     >
       {isDarkMode ? (
-        <MoonStarIcon className="tiptap-button-icon" />
-      ) : (
         <SunIcon className="tiptap-button-icon" />
+      ) : (
+        <MoonStarIcon className="tiptap-button-icon" />
       )}
     </Button>
   )

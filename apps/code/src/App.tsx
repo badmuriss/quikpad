@@ -25,7 +25,6 @@ function App() {
     
     setTheme(isDark ? 'github-dark' : 'github-light');
     
-    // Adicione um event listener para o evento de armazenamento
     const handleStorageChange = () => {
       const currentTheme = localStorage.getItem('theme');
       setTheme(currentTheme === 'dark' ? 'github-dark' : 'github-light');
@@ -33,7 +32,6 @@ function App() {
     
     window.addEventListener('storage', handleStorageChange);
     
-    // Também observe mudanças na classe do documentElement
     const observer = new MutationObserver(() => {
       const isDarkMode = document.documentElement.classList.contains('dark');
       setTheme(isDarkMode ? 'github-dark' : 'github-light');
@@ -95,7 +93,6 @@ function App() {
     initializeNote();
   }, []);
 
-// Função para salvar a nota com debounce
   const saveNoteDebounced = useRef(
     debounce(async (noteId: string, content: string, language: string | undefined) => {
       if (!noteId) return;

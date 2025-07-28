@@ -34,7 +34,7 @@ const exportToHtml = () => {
     
     if (!editor) throw new Error('Editor not found');
 
-    let htmlContent = editor.getHTML();
+    const htmlContent = editor.getHTML();
    
     const blob = new Blob([htmlContent], { type: 'text/html' });
     
@@ -64,7 +64,7 @@ const exportToMarkdown = () => {
     
     if (!editor) throw new Error('Editor not found');
 
-    let htmlContent = editor.getHTML();
+    const htmlContent = editor.getHTML();
     
     const turndownService = new TurndownService({
       headingStyle: 'atx',       

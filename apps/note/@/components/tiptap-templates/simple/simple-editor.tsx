@@ -213,42 +213,38 @@ export function SimpleEditor(note: Note) {
     setIsDragging(false);
   };
 
- // Modificado para ignorar movimento vertical
-const handleTouchStart = (e: React.TouchEvent) => {
+const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
   if (!toolbarRef.current) return;
+
   setIsDragging(true);
   setStartX(e.touches[0].pageX - toolbarRef.current.offsetLeft);
   setScrollLeft(toolbarRef.current.scrollLeft);
-  
-  // Armazenar a posição Y inicial para detectar movimento vertical
+
   const startY = e.touches[0].pageY;
-  (e.currentTarget as any).startY = startY;
+  (e.currentTarget as HTMLElement).dataset.startY = startY.toString();
 };
 
-const handleTouchMove = (e: React.TouchEvent) => {
+const handleTouchMove = (e: React.TouchEvent<HTMLElement>) => {
   if (!isDragging || !toolbarRef.current) return;
-  
+
   const currentX = e.touches[0].pageX - toolbarRef.current.offsetLeft;
   const currentY = e.touches[0].pageY;
-  const startY = (e.currentTarget as any).startY || 0;
-  
-  // Calcular a distância vertical e horizontal do movimento
+
+  const startYAttr = (e.currentTarget as HTMLElement).dataset.startY;
+  const startY = startYAttr ? parseFloat(startYAttr) : 0;
+
   const deltaY = Math.abs(currentY - startY);
   const deltaX = Math.abs(currentX - startX);
-  
-  // Se o movimento for mais horizontal que vertical, prevenir o comportamento padrão
-  // Isso impede que a página role quando o usuário tenta rolar o toolbar horizontalmente
+
   if (deltaX > deltaY) {
     e.preventDefault();
-    
     const walk = (currentX - startX) * 2;
     toolbarRef.current.scrollLeft = scrollLeft - walk;
   } else {
-    // Se o movimento for mais vertical, encerrar o arrasto do toolbar
-    // para permitir que a página role normalmente
     setIsDragging(false);
   }
 };
+
 
 const handleTouchEnd = () => {
   setIsDragging(false);
@@ -339,9 +335,7 @@ const handleTouchEnd = () => {
     }
   }, [editor?.getHTML()]);
 
-  // Efeito para salvar quando o conteúdo debounced mudar
   useEffect(() => {
-    // Não salvar na primeira renderização ou se o conteúdo estiver vazio/igual
     if (debouncedContent && debouncedContent !== note.content) {
       setIsSaving(true);
       setSaveError(null);
