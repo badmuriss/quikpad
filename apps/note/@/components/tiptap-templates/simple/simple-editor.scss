@@ -34,9 +34,24 @@ body {
   font-family: "DM Sans", sans-serif;
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar-container {
+  flex-shrink: 0;
+  height: var(--tt-toolbar-height);
+  position: relative;
+  z-index: 10;
+  background: var(--tt-bg-color);
+  border-bottom: 1px solid var(--tt-border-color, #e5e7eb);
+}
+
 .content-wrapper {
-  height: calc(100% - var(--tt-toolbar-height));
+  flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
 
   &::-webkit-scrollbar {
     display: block;
@@ -55,10 +70,9 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--tt-scrollbar-color) transparent;
 }
-
 .simple-editor-content .tiptap.ProseMirror {
   padding: 3rem 3rem;
-  min-height: 400px;
+  min-height: 70vh;
 }
 
 @media screen and (max-width: 480px) {
@@ -70,7 +84,6 @@ body {
 .simple-editor-content {
   font-size: 1.5rem; 
   padding: 1.5rem;
-  min-height: 400px;
   max-width: 900px;
   margin: 0 auto;
 }
