@@ -1,41 +1,41 @@
 # Quikpad
 
-Um conjunto de ferramentas web minimalistas e rápidas para produtividade, construído com foco em simplicidade e baixo custo.
+A set of minimalist and fast web tools for productivity, built with a focus on simplicity and low cost.
 
-## 🌐 Acesse Online
+## 🌐 Access Online
 
 - **🏠 Quikpad:** [quikpad.cc](https://quikpad.cc)
 - **📝 QuikNote:** [quiknote.cc](https://quiknote.cc)
 - **💻 QuikCode:** [quikcode.cc](https://quikcode.cc)
 
-## 📋 Sobre o Projeto
+## 📋 About the Project
 
-**Quikpad** é composto por três aplicações principais:
+**Quikpad** consists of three main applications:
 
-- **🏠 Quikpad** - Portal central que agrega e redireciona para as outras ferramentas
-- **📝 QuikNote** - Editor de rich-text (estilo Notion básico) com exportação para Markdown e PDF
-- **💻 QuikCode** - Editor de código leve com syntax highlighting, temas e exportação para texto/imagem
+- **🏠 Quikpad** - Central portal that aggregates and redirects to other tools
+- **📝 QuikNote** - Rich-text editor (basic Notion-style) with Markdown and PDF export
+- **💻 QuikCode** - Lightweight code editor with syntax highlighting, themes, and text/image export
 
-### ✨ Características
+### ✨ Features
 
-- **Monorepo** com pnpm workspaces + Turborepo
-- **TypeScript** em todo o stack
+- **Monorepo** with pnpm workspaces + Turborepo
+- **TypeScript** across the entire stack
 - **Client-Side Rendering** (React + Vite)
-- **PWA** com funcionamento offline básico
-- **Baixo custo** de hospedagem e manutenção
+- **PWA** with basic offline functionality
+- **Low cost** hosting and maintenance
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
 ```
-/apps/hub       # Portal QuikPad (React + Vite)
-/apps/note      # Editor de Notas (React + Vite + TipTap)
-/apps/code      # Editor de Código (React + Vite + Prism Editor)
-/packages/ui    # Componentes compartilhados (Tailwind CSS)
-/packages/api   # Tipos e client de API
-/backend        # API Express.js + TypeScript + MongoDB
+/apps/hub       # Quikpad Portal (React + Vite)
+/apps/note      # Notes Editor (React + Vite + TipTap)
+/apps/code      # Code Editor (React + Vite + Prism Editor)
+/packages/ui    # Shared components (Tailwind CSS)
+/packages/api   # API types and client
+/backend        # Express.js API + TypeScript + MongoDB
 ```
 
-### 🛠️ Stack Tecnológica
+### 🛠️ Tech Stack
 
 **Frontend:**
 - React 18 + Vite + TypeScript
@@ -49,40 +49,40 @@ Um conjunto de ferramentas web minimalistas e rápidas para produtividade, const
 - MongoDB
 - PM2 (Process Manager)
 
-## 🚀 Desenvolvimento Local
+## 🚀 Local Development
 
-### Pré-requisitos
+### Prerequisites
 
 - Node.js 20+
 - pnpm
-- MongoDB (local ou Atlas)
+- MongoDB (local or Atlas)
 
-### Instalação
+### Installation
 
 ```bash
-# Clone o repositório
+# Clone the repository
 git clone https://github.com/badmuriss/quikpad.git
 cd quikpad
 
-# Instale as dependências
+# Install dependencies
 pnpm install
 
-# Execute o ambiente de desenvolvimento
+# Run development environment
 pnpm run dev
 ```
 
-### 🌐 URLs de Desenvolvimento
+### 🌐 Development URLs
 
-Após executar `pnpm run dev`, as aplicações estarão disponíveis em:
+After running `pnpm run dev`, applications will be available at:
 
 - **Hub:** http://localhost:5173
 - **Note:** http://localhost:6001  
 - **Code:** http://localhost:6002
 - **Backend API:** http://localhost:3001
 
-### ⚙️ Variáveis de Ambiente
+### ⚙️ Environment Variables
 
-As aplicações funcionam com configurações padrão, mas você pode personalizar criando arquivos `.env` nas pastas raiz de cada app:
+Applications work with default configurations, but you can customize by creating `.env` files in each app's root folder:
 
 **Backend (`/backend/.env`):**
 ```env
@@ -93,52 +93,52 @@ CODES_COLLECTION=quikCodes
 NODE_ENV=development
 ```
 
-**Apps Frontend (`/apps/hub/.env`, `/apps/note/.env`, `/apps/code/.env`):**
+**Frontend Apps (`/apps/hub/.env`, `/apps/note/.env`, `/apps/code/.env`):**
 ```env
 # Hub
 VITE_QUIKNOTE_URL=http://localhost:6001
 VITE_QUIKCODE_URL=http://localhost:6002
 
-# Note e Code
+# Note and Code
 VITE_API_ENDPOINT=http://localhost:3001
 ```
 
-## 🤝 Como Contribuir
+## 🤝 How to Contribute
 
-1. **Fork** o projeto
-2. Crie uma **branch** para sua feature (`git checkout -b feature/nova-feature`)
-3. **Commit** suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. **Push** para a branch (`git push origin feature/nova-feature`)
-5. Abra um **Pull Request**
+1. **Fork** the project
+2. Create a **branch** for your feature (`git checkout -b feature/new-feature`)
+3. **Commit** your changes (`git commit -m 'Add new feature'`)
+4. **Push** to the branch (`git push origin feature/new-feature`)
+5. Open a **Pull Request**
 
-### 📝 Padrões de Desenvolvimento
+### 📝 Development Standards
 
-- Use **TypeScript** em todo o código
-- Siga os padrões do **ESLint**
+- Use **TypeScript** in all code
+- Follow **ESLint** standards
 
-### 🧪 Comandos Úteis
+### 🧪 Useful Commands
 
 ```bash
 # Lint
 pnpm run lint
 
-# Build de produção
+# Production build
 pnpm run build
 
-# Executar apenas um app específico
+# Run specific app only
 pnpm run dev --filter=note
 pnpm run dev --filter=code
 pnpm run dev --filter=hub
 ```
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+This project is under the MIT license. See the [LICENSE](LICENSE) file for more details.
 
 ## 🔗 Links
 
-- **Repositório:** https://github.com/badmuriss/quikpad
+- **Repository:** https://github.com/badmuriss/quikpad
 - **Issues:** https://github.com/badmuriss/quikpad/issues
-- **Discussões:** https://github.com/badmuriss/quikpad/discussions
+- **Discussions:** https://github.com/badmuriss/quikpad/discussions
 
 ---
