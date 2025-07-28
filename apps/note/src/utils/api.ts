@@ -51,7 +51,7 @@ export async function createNote(id: string): Promise<Note | null> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        content: '',
+        content: '<h1>Your new Note</h1>',
       }),
     });
     
@@ -59,7 +59,7 @@ export async function createNote(id: string): Promise<Note | null> {
       throw new Error('Failed to create note');
     }
     
-    return {id: id, content: ''};
+    return {id: id, content: '<h1>Your new Note</h1>'};
   } catch (error) {
     console.error('Error creating note:', error);
     return null;

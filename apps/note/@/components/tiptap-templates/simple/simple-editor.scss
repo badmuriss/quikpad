@@ -52,19 +52,13 @@ body {
     border-radius: 4px;
   }
 
-  /* Firefox scrollbar */
   scrollbar-width: thin;
   scrollbar-color: var(--tt-scrollbar-color) transparent;
 }
 
-.simple-editor-content {
-  max-width: 640px;
-  width: 100%;
-  margin: 0 auto;
-}
-
 .simple-editor-content .tiptap.ProseMirror {
   padding: 3rem 3rem;
+  min-height: 400px;
 }
 
 @media screen and (max-width: 480px) {
@@ -75,11 +69,8 @@ body {
 
 .simple-editor-content {
   font-size: 1.5rem; 
-  
   padding: 1.5rem;
-  
   min-height: 400px;
-  
   max-width: 900px;
   margin: 0 auto;
 }
@@ -96,7 +87,6 @@ body {
       -webkit-overflow-scrolling: touch; 
       overflow-y: hidden !important;
       touch-action: pan-x !important;
-      
       -webkit-user-select: none;
       user-select: none;
     }
@@ -106,8 +96,6 @@ body {
         font-size: 16px;
         padding: 4px;
         padding-bottom: 20px;
-        
-        // ADICIONE ESTAS LINHAS:
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
       }
