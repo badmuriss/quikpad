@@ -29,8 +29,8 @@ const NotePage: React.FC = () => {
           if (!noteData) {
             throw new Error('Failed to create note');
           }
+          noteData.content = '<h1>Your new Note</h1>';
         }
-        
         setNote(noteData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
