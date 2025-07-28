@@ -45,7 +45,6 @@ body {
   position: relative;
   z-index: 10;
   background: var(--tt-bg-color);
-  border-bottom: 1px solid var(--tt-border-color, #e5e7eb);
 }
 
 .content-wrapper {
@@ -70,27 +69,20 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--tt-scrollbar-color) transparent;
 }
-.simple-editor-content .tiptap.ProseMirror {
-  padding: 3rem 3rem;
+.simple-editor-content {
+  padding: 6rem 0rem;
   min-height: 70vh;
-}
-
-@media screen and (max-width: 480px) {
-  .simple-editor-content .tiptap.ProseMirror {
-    padding: 1rem 1.5rem;
-  }
 }
 
 .simple-editor-content {
   font-size: 1.5rem; 
-  padding: 1.5rem;
   max-width: 900px;
   margin: 0 auto;
 }
 
 @media (max-width: 768px) {
   .simple-editor-content {
-    padding-top: 3.5rem;
+    padding: 1rem 3rem;
   }
   .simple-editor {
     .toolbar-container {
@@ -113,5 +105,11 @@ body {
         touch-action: manipulation;
       }
     }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .simple-editor-content {
+    padding: 2rem 2rem;
   }
 }
