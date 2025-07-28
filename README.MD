@@ -21,7 +21,6 @@ A set of minimalist and fast web tools for productivity, built with a focus on s
 - **Monorepo** with pnpm workspaces + Turborepo
 - **TypeScript** across the entire stack
 - **Client-Side Rendering** (React + Vite)
-- **PWA** with basic offline functionality
 - **Low cost** hosting and maintenance
 
 ## 🏗️ Architecture
