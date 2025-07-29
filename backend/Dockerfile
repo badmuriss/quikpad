@@ -14,6 +14,9 @@ RUN npm install -g pm2
 # Copy source and compiled files
 COPY . .
 
+# Run tests to ensure code quality
+RUN npm run test
+
 # Build TypeScript
 RUN npm run build
 

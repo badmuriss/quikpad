@@ -3,8 +3,6 @@ import { getDb } from './mongoClient.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-  const notesCollection = process.env.NOTES_COLLECTION || "quikNotes";
-  const codesCollection = process.env.CODES_COLLECTION || "quikCotes";
 
 
 export async function handleRequest(req: Request, res: Response, basePath: string) {
@@ -12,7 +10,9 @@ export async function handleRequest(req: Request, res: Response, basePath: strin
     const db = await getDb();
     const id = req.params.id;
     const isNoteRequest = basePath === '/notes/';
-    const collectionName = isNoteRequest ? notesCollection : codesCollection;
+    const currentNotesCollection = process.env.NOTES_COLLECTION || "quikNotes";
+    const currentCodesCollection = process.env.CODES_COLLECTION || "quikCodes";
+    const collectionName = isNoteRequest ? currentNotesCollection : currentCodesCollection;
     const collection = db.collection(collectionName);
 
     if (!id) {

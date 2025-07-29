@@ -9,6 +9,7 @@
     "moduleResolution": "NodeNext",
     "baseUrl": "./",
     "esModuleInterop": true,
+    "isolatedModules": true,
     "sourceMap": true,
     "sourceRoot": "./src",
     "alwaysStrict": true,
@@ -20,6 +21,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["./**/*.ts"],
-  "exclude": ["node_modules/**/*"]
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules/**/*", "tests/**/*"]
 }
