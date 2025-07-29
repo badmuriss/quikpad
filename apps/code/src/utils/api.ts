@@ -1,6 +1,6 @@
 
 import { nanoid } from 'nanoid';
-import type { Note } from '../types';
+import type { Code } from '../types';
 
 const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || "http://localhost:3001";
 
@@ -26,7 +26,7 @@ export async function generateUniqueId(): Promise<string> {
   return id;
 }
 
-export async function getCode(id: string): Promise<Note | null> {
+export async function getCode(id: string): Promise<Code | null> {
   try {
     const response = await fetch(`${API_ENDPOINT}/codes/${id}`);
     if (response.status === 404) {
@@ -39,6 +39,30 @@ export async function getCode(id: string): Promise<Note | null> {
     return { id: id, content: data.content, language: data.language };
   } catch (error) {
     console.error('Error fetching note:', error);
+    return null;
+  }
+}
+
+export async function createCode(id: string, content: string = "", language: string = "javascript"): Promise<Code | null> {
+  try {
+    const response = await fetch(`${API_ENDPOINT}/codes/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content,
+        language,
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to create code');
+    }
+    
+    return { id: id, content, language };
+  } catch (error) {
+    console.error('Error creating code:', error);
     return null;
   }
 }

@@ -1,5 +1,5 @@
 
-export interface Note {
+export interface Code {
   id: string;
   content: string;
   language?: string;

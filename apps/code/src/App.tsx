@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { generateUniqueId, getCode, updateCode } from './utils/api';
+import { generateUniqueId, getCode, createCode, updateCode } from './utils/api';
+import type { Code } from './types';
 import CodeEditor from './components/CodeEditor';
 import ThemeToggle from './components/ThemeToggle';
 import LanguageSelector from './components/LanguageSelector';
@@ -68,30 +69,39 @@ function App() {
             const urlNoteId = pathParts[0];
 
             if (urlNoteId) {
-              // Try to load existing note with timeout
+              // Try to load existing code with timeout
               try {
-                const existingNote = await Promise.race([
+                const existingCode = await Promise.race([
                   getCode(urlNoteId),
-                  new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+                  new Promise<Code | null>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
                 ]);
                 
-                if (existingNote) {
+                if (existingCode) {
                   setNoteId(urlNoteId);
-                  setContent(existingNote.content);
-                  if (existingNote.language) {
-                    setLanguage(existingNote.language);
+                  setContent(existingCode.content);
+                  if (existingCode.language) {
+                    setLanguage(existingCode.language);
                   }
                 } else {
-                  // Note doesn't exist, create new one with timeout
-                  await Promise.race([
-                    updateCode(urlNoteId, "", "javascript"),
-                    new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+                  // Code doesn't exist or API error, try to create new one
+                  const createdCode = await Promise.race([
+                    createCode(urlNoteId, "", "javascript"),
+                    new Promise<Code | null>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
                   ]);
-                  setNoteId(urlNoteId);
-                  setContent('// API connection failed. Changes will not be saved automatically.\n\n');
+                  
+                  if (createdCode) {
+                    setNoteId(urlNoteId);
+                    setContent('');
+                    setLanguage('javascript');
+                  } else {
+                    // Failed to create, API connection failed
+                    setNoteId(urlNoteId);
+                    setContent('// API connection failed. Changes will not be saved automatically.\n\n');
+                    setLanguage('javascript');
+                  }
                 }
               } catch {
-                // API failed, create offline note
+                // API failed, create offline code
                 setNoteId(urlNoteId);
                 setContent('// API connection failed. Changes will not be saved automatically.\n\n');
                 setLanguage('javascript');
