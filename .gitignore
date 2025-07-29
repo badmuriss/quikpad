@@ -50,6 +50,14 @@ backend/lib
 mongo-data
 
 
+# Claude AI files
+.claude_history
+claude_history.json
+.claude_session*
+claude_session*
+.claude
+CLAUDE.md
+
 # Outros
 *.zip
 *.tar
