@@ -7,6 +7,7 @@ import LanguageSelector from './components/LanguageSelector';
 import { ShareButton } from './components/ShareButton';
 import './styles/share-button.scss';
 import { debounce } from 'lodash';
+import { nanoid } from 'nanoid';
 
 function App() {
   const [content, setContent] = useState('');
@@ -15,6 +16,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [theme, setTheme] = useState('light');
   const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const contentRef = useRef(content);
   const editorRef = useRef(null);
 
@@ -51,38 +53,83 @@ function App() {
   // Initialize note from URL or create new one
   useEffect(() => {
     const initializeNote = async () => {
-      try {
-        // Check if there's a note ID in the URL
-        const pathParts = window.location.pathname.split('/').filter(Boolean);
-        const urlNoteId = pathParts[0];
+      setIsLoading(true);
+      
+      // Add a maximum timeout for the whole initialization process
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Initialization timeout')), 5000); // 5 second timeout
+      });
 
-        if (urlNoteId) {
-          // Try to load existing note
-          const existingNote = await getCode(urlNoteId);
-          if (existingNote) {
-            setNoteId(urlNoteId); // Use the ID from URL directly
-            setContent(existingNote.content);
-            if (existingNote.language) {
-              setLanguage(existingNote.language);
+      try {
+        await Promise.race([
+          (async () => {
+            // Check if there's a note ID in the URL
+            const pathParts = window.location.pathname.split('/').filter(Boolean);
+            const urlNoteId = pathParts[0];
+
+            if (urlNoteId) {
+              // Try to load existing note with timeout
+              try {
+                const existingNote = await Promise.race([
+                  getCode(urlNoteId),
+                  new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+                ]);
+                
+                if (existingNote) {
+                  setNoteId(urlNoteId);
+                  setContent(existingNote.content);
+                  if (existingNote.language) {
+                    setLanguage(existingNote.language);
+                  }
+                } else {
+                  // Note doesn't exist, create new one with timeout
+                  await Promise.race([
+                    updateCode(urlNoteId, "", "javascript"),
+                    new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+                  ]);
+                  setNoteId(urlNoteId);
+                  setContent('// API connection failed. Changes will not be saved automatically.\n\n');
+                }
+              } catch {
+                // API failed, create offline note
+                setNoteId(urlNoteId);
+                setContent('// API connection failed. Changes will not be saved automatically.\n\n');
+                setLanguage('javascript');
+              }
+            } else {
+              // Create new note with timeout
+              try {
+                const newId = await Promise.race([
+                  generateUniqueId(),
+                  new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+                ]);
+                
+                await Promise.race([
+                  updateCode(newId, "", "javascript"),
+                  new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+                ]);
+                
+                window.history.replaceState({}, '', `/${newId}`);
+                setNoteId(newId);
+                setContent('');
+                setLanguage('javascript');
+              } catch {
+                // Use nanoid directly as fallback
+                const fallbackId = nanoid(7);
+                setNoteId(fallbackId);
+                setContent('// Failed to connect to server. Changes will not be saved.\n\n');
+                setLanguage('javascript');
+                window.history.replaceState({}, '', `/${fallbackId}`);
+              }
             }
-          } else {
-            // Note doesn't exist, create new one with this ID
-            await updateCode(urlNoteId, "javascript");
-            setNoteId(urlNoteId); // Make sure to set the ID here
-          }
-        } else {
-          // Create new note
-          const newId = await generateUniqueId();
-          await updateCode(newId, "");
-          window.history.replaceState({}, '', `/${newId}`);
-          setNoteId(newId);
-        }
-      } catch (error) {
-        console.error('Error initializing note:', error);
-        // Fallback: generate a local ID if API fails
-        const fallbackId = await generateUniqueId();
+          })(),
+          timeoutPromise
+        ]);
+      } catch {
+        // Final fallback
+        const fallbackId = nanoid(7);
         setNoteId(fallbackId);
-        setContent('');
+        setContent('// Failed to connect to server. Changes will not be saved.\n\n');
         setLanguage('javascript');
         window.history.replaceState({}, '', `/${fallbackId}`);
       } finally {
@@ -99,9 +146,11 @@ function App() {
       
       try {
         setIsSaving(true);
+        setSaveError(false);
         await updateCode(noteId, content, language);
       } catch (error) {
         console.error('Error saving note:', error);
+        setSaveError(true);
       } finally {
         setTimeout(() => {
           setIsSaving(false);
@@ -141,12 +190,22 @@ function App() {
         </div>
         
         <div className="flex items-center space-x-3">
-          {isSaving && (
-              <span className="flex items-center space-x-1 text-purple-500">
+          <div className="save-status min-w-20 flex items-center me-3">
+            {isSaving && (
+              <span className="flex items-center space-x-2 text-purple-500 text-sm">
                 <div className="w-3 h-3 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                 <span>Saving...</span>
               </span>
             )}
+            {saveError && (
+              <span className="flex items-center space-x-1 text-red-500 text-sm">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>Error</span>
+              </span>
+            )}
+          </div>
           <LanguageSelector
             selectedLanguage={language}
             onLanguageChange={handleLanguageChange}

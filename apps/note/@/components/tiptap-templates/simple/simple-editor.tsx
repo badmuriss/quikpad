@@ -327,18 +327,21 @@ const handleTouchEnd = () => {
   const [currentContent, setCurrentContent] = useState(note.content);
   const [debouncedContent] = useDebounce(currentContent, 2000);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState(null);
+  const [saveError, setSaveError] = useState(false);
   
   useEffect(() => {
-    if (editor?.getHTML()) {
-      setCurrentContent(editor.getHTML());
+    if (editor) {
+      const html = editor.getHTML();
+      if (html) {
+        setCurrentContent(html);
+      }
     }
-  }, [editor?.getHTML()]);
+  }, [editor]);
 
   useEffect(() => {
     if (debouncedContent && debouncedContent !== note.content) {
       setIsSaving(true);
-      setSaveError(null);
+      setSaveError(false);
       
       updateNote(note.id, debouncedContent)
         .then(() => {
@@ -347,8 +350,9 @@ const handleTouchEnd = () => {
           }, 200);
         })
         .catch((error) => {
+          console.error(error.message)
           setIsSaving(false);
-          setSaveError(error.message);
+          setSaveError(true);
         });
     }
   }, [debouncedContent, note.id, note.content]);
@@ -427,16 +431,16 @@ const handleTouchEnd = () => {
             : {}
         }
       >
-        <div className="save-status w-20">
+        <div className="ms-2 save-status min-w-20 flex items-center">
           {isSaving && (
-            <span className="text-gray-500 ms-4 text-sm">Saving...</span>
-          )}
-          {!isSaving && (
-            <span className="text-gray-500 ms-4 text-sm">Saved</span>
+            <span className="flex items-center space-x-2 text-purple-500 text-sm">
+              <div className="w-3 h-3 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+              <span>Saving...</span>
+            </span>
           )}
           {saveError && (
-            <span className="text-red-500 text-sm">
-              Error saving: {saveError}
+            <span className="flex items-center space-x-1 text-red-500 text-sm">
+              <span>Error Saving</span>
             </span>
           )}
         </div>
